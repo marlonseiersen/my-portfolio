@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Marlon Seiersen — Photography</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --charcoal: #141414;
+    --graphite: #1e1e1e;
+    --text: #efefed;
+    --muted: #8a8a88;
+    --line: rgba(255,255,255,.08);
+    --accent: #c8a96a;
+    --ease: cubic-bezier(.2,.7,.1,1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  .serif { font-family: Georgia, "Times New Roman", serif; font-weight: 300; font-style: italic; }
+  .eyebrow { font-size: .72rem; letter-spacing: .25em; text-transform: uppercase; color: var(--muted); }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+
+  /* Entrance + reveal */
+  @keyframes rise { from { opacity: 0; transform: translateY(40px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+    display: flex; justify-content: space-between; align-items: center;
+    height: 72px; padding: env(safe-area-inset-top,0px) 2rem 0;
+    transition: background .4s, border-color .4s, backdrop-filter .4s;
+    border-bottom: 1px solid transparent;
+  }
+  nav.scrolled { background: rgba(10,10,10,.7); backdrop-filter: blur(14px); border-color: var(--line); }
+  .logo { font-size: .8rem; letter-spacing: .3em; text-transform: uppercase; font-weight: 600; }
+  .links { display: flex; gap: 2.2rem; list-style: none; }
+  .links a { font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); position: relative; transition: color .3s; }
+  .links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .4s var(--ease); }
+  .links a:hover { color: var(--text); }
+  .links a:hover::after { transform: scaleX(1); }
+
+  /* Hero */
+  .hero {
+    position: relative; height: 100vh; min-height: 620px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding-bottom: 8vh; overflow: hidden;
+    background:
+      radial-gradient(ellipse 60% 50% at 75% 30%, rgba(200,169,106,.14), transparent 70%),
+      radial-gradient(ellipse 80% 60% at 20% 90%, #1c1c1c, transparent 70%),
+      linear-gradient(180deg, #0a0a0a 0%, #111 100%);
+  }
+  .hero::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.04) 50%, transparent 60%);
+    animation: sweep 9s ease-in-out infinite;
+  }
+  @keyframes sweep { 0%,100% { transform: translateX(-20%); } 50% { transform: translateX(20%); } }
+  .hero h1 {
+    font-size: clamp(3.4rem, 13vw, 11.5rem); font-weight: 700;
+    letter-spacing: -.045em; line-height: .88; text-transform: uppercase;
+    animation: rise 1.4s var(--ease) both;
+  }
+  .hero h1 span { display: block; }
+  .hero h1 .serif { text-transform: none; letter-spacing: -.02em; color: var(--accent); font-weight: 300; }
+  .hero-meta {
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem;
+    margin-top: 3rem; animation: fade 1.6s .4s both;
+  }
+  .hero-meta p { max-width: 36ch; color: var(--muted); font-size: .95rem; }
+  .scroll-cue { display: flex; align-items: center; gap: .8rem; }
+  .scroll-cue i { display: block; width: 1px; height: 56px; background: linear-gradient(var(--accent), transparent); animation: drip 2.2s infinite; }
+  @keyframes drip { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+  /* Work */
+  section { padding: 10rem 0; position: relative; }
+  .section-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4rem; gap: 2rem; flex-wrap: wrap; }
+  .section-head h2 { font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 700; letter-spacing: -.03em; line-height: 1; }
+  .work { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2.5rem 1.5rem; }
+  .card { position: relative; overflow: hidden; background: var(--charcoal); cursor: pointer; }
+  .card .img { width: 100%; height: 100%; transition: transform 1.4s var(--ease), filter .6s; }
+  .card:hover .img { transform: scale(1.06); filter: brightness(1.1); }
+  .card .info { position: absolute; left: 1.5rem; bottom: 1.5rem; right: 1.5rem; display: flex; justify-content: space-between; align-items: flex-end; transform: translateY(12px); opacity: 0; transition: all .6s var(--ease); }
+  .card:hover .info { transform: none; opacity: 1; }
+  .card .info h3 { font-size: 1.1rem; font-weight: 500; }
+  .card .info span { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+  .c1 { grid-column: 1 / 8; aspect-ratio: 4 / 5; }
+  .c2 { grid-column: 9 / 13; aspect-ratio: 3 / 4; margin-top: 12rem; }
+  .c3 { grid-column: 2 / 6; aspect-ratio: 1 / 1; }
+  .c4 { grid-column: 7 / 13; aspect-ratio: 16 / 10; margin-top: 4rem; }
+  .c5 { grid-column: 1 / 13; aspect-ratio: 21 / 9; }
+  .c6 { grid-column: 4 / 10; aspect-ratio: 4 / 3; }
+  .ph1 { background: radial-gradient(circle at 30% 25%, rgba(200,169,106,.35), transparent 45%), linear-gradient(160deg,#2a2a2a,#0d0d0d); }
+  .ph2 { background: radial-gradient(circle at 70% 40%, rgba(255,255,255,.18), transparent 50%), linear-gradient(200deg,#303030,#0c0c0c); }
+  .ph3 { background: radial-gradient(circle at 50% 60%, rgba(200,169,106,.22), transparent 55%), linear-gradient(120deg,#1f1f1f,#080808); }
+  .ph4 { background: radial-gradient(circle at 20% 80%, rgba(255,255,255,.12), transparent 50%), linear-gradient(90deg,#262626,#101010); }
+  .ph5 { background: radial-gradient(ellipse at 80% 20%, rgba(200,169,106,.28), transparent 50%), linear-gradient(180deg,#1a1a1a,#060606); }
+  .ph6 { background: radial-gradient(circle at 40% 50%, rgba(255,255,255,.14), transparent 55%), linear-gradient(135deg,#242424,#0b0b0b); }
+  /* Replace .ph* with <img class="img" src="..." alt="..."> once you have photos */
+
+  /* About */
+  .about { background: var(--charcoal); overflow: hidden; }
+  .about-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 6rem; align-items: center; }
+  .about-portrait { position: relative; aspect-ratio: 3 / 4; background: radial-gradient(circle at 35% 30%, rgba(200,169,106,.25), transparent 50%), linear-gradient(170deg,#2b2b2b,#0a0a0a); }
+  .about-portrait::after { content: ""; position: absolute; inset: auto 0 0 0; height: 40%; background: linear-gradient(transparent, rgba(0,0,0,.6)); }
+  .about-portrait .tag { position: absolute; left: -1.5rem; bottom: 2.5rem; z-index: 2; background: var(--accent); color: #0a0a0a; padding: .8rem 1.2rem; font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; }
+  .about h2 { font-size: clamp(2rem, 4.5vw, 3.6rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.02; margin-bottom: 2rem; }
+  .about p { color: var(--muted); max-width: 52ch; margin-bottom: 1.2rem; }
+  .about .offset { margin-left: 15%; }
+
+  /* Skills */
+  .skills-list { border-top: 1px solid var(--line); }
+  .skill { display: grid; grid-template-columns: 5rem 1fr 1fr; gap: 2rem; align-items: baseline; padding: 2.4rem 0; border-bottom: 1px solid var(--line); transition: padding .5s var(--ease), background .5s; }
+  .skill:hover { padding-left: 1.5rem; background: linear-gradient(90deg, rgba(200,169,106,.06), transparent 60%); }
+  .skill .num { font-size: .75rem; letter-spacing: .15em; color: var(--accent); }
+  .skill h3 { font-size: clamp(1.6rem, 3vw, 2.6rem); font-weight: 600; letter-spacing: -.02em; }
+  .skill p { color: var(--muted); font-size: .92rem; }
+
+  /* Contact */
+  .contact { padding-bottom: 6rem; background: radial-gradient(ellipse 70% 60% at 50% 110%, rgba(200,169,106,.12), transparent 70%); }
+  .contact h2 { font-size: clamp(3.2rem, 11vw, 9rem); font-weight: 700; letter-spacing: -.05em; line-height: .9; text-transform: uppercase; }
+  .contact h2 .serif { display: block; text-transform: none; letter-spacing: -.02em; color: var(--accent); font-weight: 300; }
+  .contact-mail { display: inline-block; margin-top: 3.5rem; font-size: clamp(1.2rem, 2.6vw, 1.9rem); border-bottom: 1px solid var(--accent); padding-bottom: .4rem; transition: color .3s; }
+  .contact-mail:hover { color: var(--accent); }
+  .contact-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; margin-top: 8rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+  .socials { display: flex; gap: 2.5rem; list-style: none; }
+  .socials a { font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); transition: color .3s; }
+  .socials a:hover { color: var(--accent); }
+  footer { padding: 2rem 0; font-size: .72rem; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; }
+
+  /* Lightbox */
+  .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.94); display: none; align-items: center; justify-content: center; z-index: 50; padding: 2rem; }
+  .lightbox.open { display: flex; animation: fade .4s both; }
+  .lightbox .frame { width: min(90vw, 1000px); height: 80vh; background: var(--charcoal); }
+  .lightbox button { position: absolute; top: 1.2rem; right: 1.5rem; background: none; border: 0; color: var(--text); font-size: 2.2rem; cursor: pointer; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .work > * { grid-column: 1 / -1 !important; margin-top: 0 !important; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .about .offset { margin-left: 0; }
+    .about-portrait .tag { left: 1rem; }
+    .skill { grid-template-columns: 2.5rem 1fr; }
+    .skill p { grid-column: 2; }
+  }
+  @media (max-width: 640px) {
+    nav { padding: 0 1.25rem; }
+    .links { gap: 1.1rem; }
+    .links a { font-size: .62rem; letter-spacing: .12em; }
+    .logo { font-size: .7rem; }
+    .wrap { padding: 0 1.25rem; }
+    section { padding: 6rem 0; }
+    .hero-meta { flex-direction: column; align-items: flex-start; }
+    .scroll-cue { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#top" class="logo">Marlon Seiersen</a>
+  <ul class="links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Expertise</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <h1><span>Marlon</span><span>Seiersen <span class="serif">Photography</span></span></h1>
+    <div class="hero-meta">
+      <p>Portraits, landscapes and editorial work from Silkeborg, Denmark. Quiet light, honest moments.</p>
+      <div class="scroll-cue eyebrow"><i></i>Scroll</div>
+    </div>
+  </div>
+</header>
+
+<section id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Selected<br><span class="serif">Work</span></h2>
+      <span class="eyebrow">2022 — 2026</span>
+    </div>
+    <div class="work">
+      <figure class="card c1 reveal" tabindex="0"><div class="img ph1"></div><figcaption class="info"><h3>Golden Hour, Coast</h3><span>Landscape</span></figcaption></figure>
+      <figure class="card c2 reveal" tabindex="0"><div class="img ph2"></div><figcaption class="info"><h3>Portrait No. 1</h3><span>Portrait</span></figcaption></figure>
+      <figure class="card c3 reveal" tabindex="0"><div class="img ph3"></div><figcaption class="info"><h3>Stillness</h3><span>Editorial</span></figcaption></figure>
+      <figure class="card c4 reveal" tabindex="0"><div class="img ph4"></div><figcaption class="info"><h3>Urban Lines</h3><span>Architecture</span></figcaption></figure>
+      <figure class="card c5 reveal" tabindex="0"><div class="img ph5"></div><figcaption class="info"><h3>Winter Field</h3><span>Landscape</span></figcaption></figure>
+      <figure class="card c6 reveal" tabindex="0"><div class="img ph6"></div><figcaption class="info"><h3>Study in Grey</h3><span>Editorial</span></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="about">
+  <div class="wrap about-grid">
+    <div class="reveal">
+      <div class="about-portrait"><span class="tag">Based in Silkeborg</span></div>
+    </div>
+    <div class="offset reveal">
+      <p class="eyebrow" style="margin-bottom:1.5rem">About</p>
+      <h2>Quiet images, <span class="serif">made with intention.</span></h2>
+      <p>I'm a photographer working across portraits, landscapes and editorial projects. I'm drawn to natural light and the small, unguarded moments that are easy to miss.</p>
+      <p>Available for commissions, collaborations and fine art prints.</p>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Expertise</h2>
+      <span class="eyebrow">What I do</span>
+    </div>
+    <div class="skills-list">
+      <div class="skill reveal"><span class="num">01</span><h3>Portraits</h3><p>Natural, unposed images that feel like you on your best day.</p></div>
+      <div class="skill reveal"><span class="num">02</span><h3>Landscapes</h3><p>Patient work with weather, light and place.</p></div>
+      <div class="skill reveal"><span class="num">03</span><h3>Editorial</h3><p>Considered stories for magazines, brands and campaigns.</p></div>
+      <div class="skill reveal"><span class="num">04</span><h3>Retouching</h3><p>Clean, natural finishing that keeps the image honest.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap">
+    <h2 class="reveal">Let's<span class="serif">make something.</span></h2>
+    <a class="contact-mail reveal" href="mailto:marlonseiersen@gmail.com">marlonseiersen@gmail.com</a>
+    <div class="contact-row">
+      <ul class="socials">
+        <li><a href="https://instagram.com/marlon.seiersen" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="mailto:marlonseiersen@gmail.com">Email</a></li>
+      </ul>
+      <footer>&copy; <span id="year"></span> Marlon Seiersen</footer>
+    </div>
+  </div>
+</section>
+
+<div class="lightbox" id="lightbox"><button id="close" aria-label="Close">&times;</button><div class="frame"></div></div>
+
+<script>
+  // Sticky nav background on scroll
+  const nav = document.getElementById("nav");
+  const onScroll = () => nav.classList.toggle("scrolled", window.scrollY > 40);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  // Reveal on scroll
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+  // Lightbox placeholder (wire up once photos are added)
+  const lb = document.getElementById("lightbox");
+  document.querySelectorAll(".card").forEach(c => c.addEventListener("click", () => lb.classList.add("open")));
+  document.getElementById("close").addEventListener("click", () => lb.classList.remove("open"));
+  lb.addEventListener("click", e => { if (e.target === lb) lb.classList.remove("open"); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") lb.classList.remove("open"); });
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
